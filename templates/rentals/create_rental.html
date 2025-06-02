@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}OrcaNation | Equipment Rentals{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid my-4">
+    <div class="row g-4">
+
+        <!-- Coluna esquerda -->
+        <div class="col-md-4">
+            <div class="guest-info-box mb-4">
+                <h4>{{ guest.name }}</h4>
+                <p>Room: {{ guest.room_number }}</p>
+            </div>
+
+            <div class="rented-items-box shadow-sm">
+                <h5 class="mb-3">Equipment Rented</h5>
+                <table class="table table-sm align-middle">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>ID</th>
+                        <th class="text-end" style="width: 50px;">Del</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody id="rented-items-tbody">
+                    {% for item in rented_items %}
+                    <tr>
+                        <td>{{ item.label }}</td>
+                        <td>{{ item.identifier }}</td>
+                        <td class="text-end">
+                            <form method="post"
+                                  action="{{ url_for('rentals.delete_rental_item', rental_id=rental._id, category=item.category, item_identifier=item.identifier) }}"
+                                  style="display:inline;">
+                                <button type="submit" class="btn btn-sm btn-outline-danger btn-delete-item">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="3" class="text-center text-muted">No items rented yet.</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <form action="{{ url_for('rentals.confirm_rental', rental_id=rental._id) }}" method="post"
+                          style="display:inline;">
+                        <button type="submit" class="btn btn-secondary fw-semibold px-4">
+                            Confirm Rental
+                        </button>
+                    </form>
+                    <form method="post" action="{{ url_for('rentals.clear_rental_items', rental_id=rental._id) }}">
+                        <button type="submit" class="btn btn-primary fw-semibold px-4">
+                            Clear All
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coluna direita -->
+        <div class="col-md-8">
+            <div class="d-flex flex-wrap gap-4 justify-content-start">
+
+                {% for equipment in equipments %}
+                <div class="flip-card">
+                    <input type="checkbox" class="flip-toggle" id="flip-{{ equipment.category }}">
+                    <label for="flip-{{ equipment.category }}" class="flip-card-inner">
+
+                        <!-- Frente do card -->
+                        <div class="flip-card-front">
+                            <img src="{{ url_for('static', filename='img/equipments/' + equipment.category + '.jpg') }}"
+                                 alt="{{ equipment.category }}">
+                            <p class="mt-2 text-center fw-semibold">{{ equipment.label }}</p>
+                        </div>
+
+                        <!-- Verso do card -->
+                        <div class="flip-card-back">
+                            <form method="POST" action="">
+                                <input type="hidden" name="equipment_category" value="{{ equipment.category }}">
+
+                                {% if equipment.category in ['kayak', 'sup'] %}
+                                <div class="mb-2">
+                                    <label class="form-label">Boat ID</label>
+                                    <input type="number" name="equipment_id" class="form-control" required>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">Paddle ID</label>
+                                    <input type="number" name="paddle_id" class="form-control" required>
+                                </div>
+
+                                {% elif equipment.category == 'double_kayak' %}
+                                <div class="mb-2">
+                                    <label class="form-label">Boat ID</label>
+                                    <input type="number" name="equipment_id" class="form-control" required>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">Paddle 1 ID</label>
+                                    <input type="number" name="paddle_id" class="form-control" required>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">Paddle 2 ID</label>
+                                    <input type="number" name="paddle_1_id" class="form-control">
+                                </div>
+
+                                {% else %}
+                                <div class="mb-2">
+                                    <label class="form-label">{{equipment.label.title()}} ID</label>
+                                    <input type="number" name="equipment_id" class="form-control" required>
+                                </div>
+                                {% endif %}
+
+                                <button type="submit" class="btn btn-secondary w-100">Add</button>
+                            </form>
+                        </div>
+
+                    </label>
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+
+
+        {% endblock %}

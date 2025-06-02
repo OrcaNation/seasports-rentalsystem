@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}View the Problems for {{ equipment.type }}{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+  <div class="row">
+
+    <!-- Coluna da esquerda - 30% -->
+    <div class="col-md-4">
+      <div class="text-center">
+        <img src="{{ url_for('static', filename='img/equipments/' + equipment.category + '.jpg') }}"
+             alt="Equipment Image"
+             class="img-fluid mb-3 rounded shadow rounded-circle bg-light"
+             style="max-height: 250px; object-fit: contain;">
+
+        <div class="mt-3">
+          <div class=" p-3">
+           <h5 class="mb-0" style="font-size: 2rem;">
+  {{ equipment.type }}
+</h5>
+          </div>
+          <p class="mt-2 fw-bold" style="font-family: 'Kanit', sans-serif; font-size: 7.5rem;">
+  {{ equipment.identifier }}
+</p>
+        </div>
+
+      </div>
+    </div>
+
+   <!-- Coluna da direita - 70% -->
+<div class="col-md-8">
+  <div class="p-4 rounded shadow" style="background-color: #0d2c4d;">
+    <h3 class="text-white mb-4" style="font-family: 'Kanit', sans-serif; text-transform: uppercase;">
+      Reported Problems
+    </h3>
+    {% if equipment.problems %}
+      <div class="table-responsive">
+        <table class="table table-hover table-bordered bg-white rounded overflow-hidden">
+          <thead class="table-dark text-uppercase" style="font-family: 'Kanit', sans-serif;">
+            <tr>
+              <th class="rounded-start">Date</th>
+              <th>Staff</th>
+              <th>Condition</th>
+              <th class="rounded-end">Problem</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for problem in equipment.problems %}
+              <tr>
+                <td>{{ problem.reported_at.strftime("%d-%b-%Y") if problem.reported_at }}</td>
+                <td>{{ problem.reported_by or '-' }}</td>
+                <td>{{ problem.condition or '-' }}</td>
+                <td>{{ problem.description }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="text-white">No problems reported for this equipment yet.</p>
+    {% endif %}
+  </div>
+
+      <div class="d-flex justify-content-end gap-2 mt-4">
+
+        <a href="{{ url_for('equipments.list_equipments') }}" class="btn btn-secondary">Back</a>
+      </div>
+  </div>
+</div>
+{% endblock %}

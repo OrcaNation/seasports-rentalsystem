@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Price List{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <table class="table table-sm table-striped table-orca">
+        <thead>
+        <tr>
+            <th></th>
+            <th class="text-start fs-5">Name</th>
+            <th class="text-start fs-5">Rental Price</th>
+            <th class="text-start fs-5">Late Fee</th>
+            <th class="text-start fs-5">Replacement Fee</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        {% for eq in equipments %}
+        <tr>
+            <td class="text-center align-middle">
+                <img src="{{ url_for('static', filename='img/equipments/' + eq.category + '.jpg') }}"
+                     alt="{{ eq.label }}"
+                     class="table-image">
+            </td>
+
+            <td class="align-middle fs-5">{{ eq.label }}</td>
+            <td class="align-middle fs-5">RM {{ eq.rental_price }}</td>
+            <td class="align-middle fs-5">RM {{ eq.late_fee }}</td>
+            <td class="align-middle fs-5">RM {{ eq.replacement_fee }}</td>
+
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+<div class="d-flex justify-content-center gap-3 mt-4 mb-5">
+    <a href="{{ url_for('guests.register') }}" class="btn btn-secondary position-relative">
+        <i class="bi bi-bi-people-fill me-1"></i> Add Guest
+    </a>
+    <a href="{{ url_for('equipments.list_equipments') }}" class="btn btn-secondary position-relative">
+        <i class="bi bi-life-preserver me-1"></i> Equipments
+    </a>
+    <a href="{{ url_for('home') }}" class="btn btn-primary">
+        <i class="bi bi-arrow-left-circle me-1"></i> Back
+    </a>
+
+</div>
+{% endblock %}

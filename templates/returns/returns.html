@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Return Equipment{% endblock %}
+
+{% block content %}
+  <div class="table-responsive">
+    <table class="table table-sm table-striped table-orca">
+      <thead>
+        <tr>
+       <th class="text-start align-middle">Room</th>
+        <th class="text-start align-middle">Name</th>
+        <th class="text-start align-middle">Date</th>
+
+          {% for cat in equipment_categories %}
+          <th>
+            <img src="{{ url_for('static', filename='img/equipments/' + cat + '.jpg') }}"
+                 alt="{{ cat }}"
+                 class="rounded-circle border"
+                 style="width: 40px; height: 40px; object-fit: cover;">
+          </th>
+          {% endfor %}
+          <th class="align-middle">Select</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if rentals %}
+          {% for rental in rentals %}
+          <tr>
+            <td>{{ rental.room_number }}</td>
+            <td>{{ rental.guest_name }}</td>
+            <td>{{ rental.date_obj.strftime("%d-%b") }}</td>
+            {% for cat in equipment_categories %}
+            <td class="text-center">
+              {{ rental.rented_items | selectattr('category', 'equalto', cat) | selectattr('returned', 'equalto', false) | list | length }}
+            </td>
+            {% endfor %}
+            <td>
+              <a href="{{ url_for('rentals.show_return_details', rental_id=rental._id) }}" class="btn btn-sm btn-secondary d-flex justify-content-center ">
+                <i class="bi bi-box-arrow-in-right"></i> Select
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="{{ 4 + equipment_categories|length }}" class="text-center text-muted py-4">
+              No active rentals with items to return.
+            </td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="d-flex justify-content-center mt-4">
+    <a href="{{ url_for('home') }}" class="btn btn-primary px-4">Back</a>
+  </div>
+</div>
+{% endblock %}

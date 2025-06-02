@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block title %}Equipment List{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <div class="row">
+
+        <!-- Coluna da esquerda - Filtro -->
+        <div class="col-md-4">
+            <div class="text-center mb-4">
+                <img src="{{ url_for('static', filename='img/equipments/' + (equipments[0].category if equipments[0] else 'default') + '.jpg') }}"
+                     alt="Equipment Image"
+                     class="img-fluid rounded-circle border shadow bg-light mx-auto d-block"
+                     style="width: 250px; height: 250px; object-fit: cover;">
+            </div>
+
+            <form method="get" action="{{ url_for('equipments.list_equipments') }}">
+                <div class="form-group">
+                    <label for="typeFilter" class="fw-bold mb-2">Filter by Type:</label>
+                    <select id="typeFilter" name="category" class="form-select" onchange="this.form.submit()">
+                        <option value="">All</option>
+                        {% for t in types %}
+                        <option value="{{ t }}" {% if t== selected_type %}selected{% endif %}>{{ t }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="d-flex justify-content-center mt-4">
+                    <div class="form-check form-switch fs-5">
+                        <input class="form-check-input" type="checkbox" id="availableOnlySwitch" name="available_only"
+                               onchange="this.form.submit()" {% if available_only %}checked{% endif %}>
+                        <label class="form-check-label ms-1" for="availableOnlySwitch" style="font-weight: 300;">
+                            Show only available
+                        </label>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Coluna da direita - Tabela -->
+        <div class="col-md-8">
+            <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+                <table class="table table-sm table-striped table-orca">
+                    <thead>
+                    <tr>
+                        <th>Number</th>
+                        <th class="text-start">Equipment</th>
+                        <th class="text-start">Condition</th>
+                        <th>Available</th>
+                        <th>View the Log</th>
+                        <th>Report</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for eq in equipments %}
+                    <tr>
+                        <td class="text-center">{{ eq.identifier }}</td>
+                        <td>{{ eq.label }}</td>
+                        <td>{{ eq.condition }}</td>
+                        <td class="text-center">
+                            {% if eq.available %}
+                            <i class="bi bi-check-circle-fill text-success" title="Available"></i>
+                            {% else %}
+                            <i class="bi bi-x-circle-fill text-danger" title="Not Available"></i>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            <a href="{{ url_for('equipments.view_problems', equipment_id=eq._id) }}"
+                               class="btn btn-sm btn-outline-dark">
+                                <i class="bi bi-exclamation-circle"></i> View
+                            </a>
+                        </td>
+                        <td class="text-center">
+                            <a href="{{ url_for('equipments.report_problem', equipment_id=eq._id) }}"
+                               class="btn btn-sm btn-secondary">
+                                <i class="bi bi-tools"></i> Report
+                            </a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center">No equipment available.</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="d-flex justify-content-center gap-3 mt-4">
+                <a href="{{ url_for('equipments.price_list') }}" class="btn btn-secondary position-relative">
+                    <i class="bi bi-bar-chart-fill me-1"></i> Price List
+                </a>
+                <a href="{{ url_for('home') }}" class="btn btn-primary">
+                    <i class="bi bi-arrow-left-circle me-1"></i> Back
+                </a>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const typeSelect = document.getElementById('typeFilter');
+    const image = document.getElementById('equipment-image');
+
+    typeSelect.addEventListener('change', () => {
+      const selected = typeSelect.value.toLowerCase();
+      if (selected) {
+        image.src = `/static/img/equipments/${selected}.jpg`;
+      } else {
+        image.src = `/static/img/equipments/default.jpg`;
+      }
+    });
+</script>
+{% endblock %}

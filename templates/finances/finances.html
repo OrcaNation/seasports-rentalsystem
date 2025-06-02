@@ -1,0 +1,62 @@
+<!-- templates/finances/finances.html -->
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-5 table-responsive">
+        <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+            <table class="table table-sm table-striped table-orca">
+              <thead>
+      <tr>
+        <th class="text-start">Room</th>
+        <th class="text-start">Name</th>
+        <th class="text-start">Start Date</th>
+        <th class="text-start">End Date</th>
+        <th class="text-start">Total</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if guests %}
+        {% for guest in guests %}
+        <tr>
+          <td>{{ guest.room }}</td>
+          <td>{{ guest.name }}</td>
+          <td>{{ guest.start.strftime('%d-%b') }}</td>
+          <td>{{ guest.end.strftime('%d-%b') }}</td>
+          <td>RM {{ guest.total }}</td>
+          <td>
+              <a href="{{ url_for('finances.finances_detail', room_number=guest.room) }}" class="btn btn-sm btn-secondary d-flex justify-content-center">
+                <i class="bi bi-box-arrow-in-right"></i> Select
+              </a>
+          </td>
+        </tr>
+        {% endfor %}
+      {% else %}
+        <tr>
+          <td colspan="6" class="text-center text-muted py-4">
+            No active rentals with items to return.
+          </td>
+        </tr>
+      {% endif %}
+    </tbody>
+  </table>
+          </div>
+     </div>
+
+  <div class="d-flex justify-content-center gap-3 mt-4">
+    <a href="{{ url_for('home') }}" class="btn btn-primary">
+      <i class="bi bi-arrow-left-circle me-1"></i> Back
+    </a>
+<a href="#" class="btn btn-secondary position-relative">
+  <i class="bi bi-bar-chart-fill me-1"></i> Reports
+  <span class="position-absolute top-100 start-100 translate-middle badge bg-warning text-dark">
+    Coming Soon!
+  </span>
+</a>
+
+    </a>
+  </div>
+
+
+{% endblock %}

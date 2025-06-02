@@ -1,0 +1,285 @@
+/* Variáveis orca */
+:root {
+  --orca-blue: #1e1542;
+  --orca-salmon: #f47d72;
+  --orca-pink: #fde8e4;
+
+  --btn-primary-bg: var(--orca-salmon);
+  --btn-primary-hover-bg: var(--orca-blue);
+  --btn-primary-text: white;
+
+  --btn-secondary-bg: var(--orca-blue);
+  --btn-secondary-hover-bg: var(--orca-salmon);
+  --btn-secondary-text: white;
+
+  --navbar-bg-color: var(--orca-blue);
+  --navbar-text-color: white;
+}
+
+/* Reset básico e fontes */
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: var(--orca-pink);
+  color: var(--orca-blue);
+  margin: 0;
+  padding: 0;
+}
+
+
+
+/* Navbar */
+.navbar-custom {
+  background-color: var(--navbar-bg-color) !important;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.navbar-custom .navbar-title {
+  color: var(--navbar-text-color);
+  font-family: 'Kanit', sans-serif;
+  font-weight: 900;
+  font-size: 2rem;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.navbar-logo {
+  height: 40px;
+  margin-right: 10px;
+}
+
+/* Links */
+a {
+  color: var(--orca-salmon);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+a:hover {
+  color: var(--orca-blue);
+  text-decoration: underline;
+}
+
+/* Botões Primary */
+.btn-primary {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border: none;
+  transition: background-color 0.3s ease;
+
+}
+.btn-primary:hover,
+.btn-primary:focus {
+  background: var(--btn-primary-hover-bg);
+  color: var(--btn-primary-text);
+  box-shadow: 0 3px 8px rgba(30,21,66,0.6);
+}
+
+/* Botões Secondary */
+.btn-secondary {
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+  border: none;
+  transition: background-color 0.3s ease;
+
+}
+.btn-secondary:hover,
+.btn-secondary:focus {
+  background: var(--btn-secondary-hover-bg);
+  color: var(--btn-secondary-text);
+  box-shadow: 0 3px 8px rgba(244,125,114,0.6);
+}
+
+/* Alertas personalizados */
+.alert-info {
+  background-color: var(--orca-blue);
+  color: white;
+  border: none;
+}
+
+.alert-success {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+}
+
+.alert-warning {
+  background-color: var(--orca-salmon);
+  color: black;
+  border: none;
+}
+
+.alert-danger {
+  background-color: #e55353;
+  color: white;
+  border: none;
+}
+
+/* Botões custom (exemplo que você usa no home) */
+.btn-custom {
+  background-color: var(--orca-pink);
+  color: var(--orca-blue);
+  border: 2px solid var(--orca-blue);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+.btn-custom:hover {
+  background-color: var(--orca-salmon);
+  color: white;
+  ;
+}
+
+/* Badge circular */
+.badge {
+  font-weight: 700;
+}
+
+
+
+.logo-hero {
+  max-height: 350px;
+  max-width: 100%;
+  height: auto;
+  width: auto;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.form-container {
+  background-color: var(--orca-blue);
+  padding: 2rem;
+  border-radius: 1rem;
+  color: white; /* se quiser o texto em branco */
+}
+
+.guest-info-box {
+  background-color: var(--navbar-bg-color);
+  color: white;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+}
+
+.equipment-card {
+  flex: 1 1 calc(33% - 1rem); /* ocupa ~3 por linha, ajustável */
+  max-width: calc(33% - 1rem);
+  min-width: 180px;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+.equipment-card:hover {
+  transform: scale(1.07);
+}
+
+.equipment-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-bottom: 1px solid #ddd;
+}
+
+.equipment-card p {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Botões da tabela */
+.btn-delete-item {
+  transition: background-color 0.3s ease;
+}
+.btn-delete-item:hover {
+  background-color: #c82333;
+  color: white;
+}
+
+/* Área de tabela branca */
+.rented-items-box {
+  background-color: white;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  min-height: 320px;
+}
+
+  .flip-card {
+    perspective: 1000px;
+    width: 180px;
+    height: 300px;
+  }
+
+  .flip-card-inner {
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+    position: relative;
+  }
+
+  .flip-toggle:checked + .flip-card-inner {
+    transform: rotateY(180deg);
+  }
+
+  .flip-card-front,
+  .flip-card-back {
+    position: absolute;
+    backface-visibility: hidden;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  }
+
+  .flip-card-front {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .flip-card-front img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+  }
+
+  .flip-card-back {
+    background-color: #f8f9fa;
+    transform: rotateY(180deg);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .flip-toggle {
+    display: none;
+  }
+
+.table-orca {
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.table-orca thead {
+  background-color: var(--orca-blue) !important;
+  color: white !important;
+  text-align: center;
+}
+
+.table-orca thead th {
+  background-color: var(--orca-blue) !important;
+  color: white !important;
+  vertical-align: middle;
+}
+
+.table-orca img {
+  width: 50x; /* Ajuste conforme necessário */
+  height: 50px; /* Mantém o tamanho consistente */
+  border-radius: 20%; /* Deixa a imagem circular */
+  object-fit: cover; /* Evita distorção e preenche o espaço corretamente */
+}

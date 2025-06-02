@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Upload CSV - Import Equipments{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4" style="font-family: 'Kanit', sans-serif; font-weight: 900; text-transform: uppercase;">
+    Upload CSV to Import Equipments
+  </h2>
+
+  {% if message %}
+    <div class="alert alert-info">{{ message }}</div>
+  {% endif %}
+
+  <!-- FORMULÁRIO DE EQUIPAMENTOS -->
+<form method="POST" enctype="multipart/form-data" action="{{ url_for('upload_equipment_csv') }}">
+  <div class="mb-3">
+    <label for="csv_file" class="form-label">Choose CSV file</label>
+    <input type="file" class="form-control" id="csv_file" name="csv_eq_file" accept=".csv" required>
+  </div>
+  <button type="submit" class="btn btn-primary">Upload</button>
+</form>
+
+
+</div>
+<div class="container mt-5">
+  <h2 class="mb-4" style="font-family: 'Kanit', sans-serif; font-weight: 900; text-transform: uppercase;">
+    Upload CSV to Update the Pricelist
+  </h2>
+
+  {% if message %}
+    <div class="alert alert-info">{{ message }}</div>
+  {% endif %}
+
+  <!-- FORMULÁRIO DE PRECIFICAÇÃO -->
+<form method="POST" enctype="multipart/form-data" action="{{ url_for('upload_pricelist_csv') }}">
+  <div class="mb-3">
+    <label for="pricelist_csv_file" class="form-label">Choose CSV file</label>
+    <input type="file" class="form-control" id="pricelist_csv_file" name="csv_price_file" accept=".csv" required>
+  </div>
+  <button type="submit" class="btn btn-primary">Upload</button>
+</form>
+</div>
+
+
+
+
+
+{% endblock %}

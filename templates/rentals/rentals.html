@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}OrcaNation | Equipment Rentals{% endblock %}
+
+{% block content %}
+<div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+    <table class="table table-sm table-striped table-orca">
+      <thead>
+      <tr>
+        <th class="text-start">Name</th>
+        <th class="text-start">Room Number</th>
+        <th class="text-start">Departure Date</th>
+        <th>Select</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for guest in guests %}
+      <tr>
+        <td>{{ guest.name }}</td>
+        <td>{{ guest.room_number }}</td>
+        <td>{{ guest.departure_date.strftime('%d-%b') }}</td>
+        <td class="text-center">
+          <a href="{{ url_for('rentals.create_rental', guest_id=guest._id) }}" class="btn btn-sm btn-secondary d-flex justify-content-center">
+            <i class="bi bi-check-circle"></i> Select
+          </a>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="4" class="text-center">No eligible guests found.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="d-flex justify-content-center gap-3 mt-3">
+    <a href="{{ url_for('guests.register') }}" class="btn btn-secondary">Add a Guest</a>
+    <a href="{{ url_for('home') }}" class="btn btn-primary">Back</a>
+  </div>
+</div>
+
+{% endblock %}
