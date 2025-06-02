@@ -1,0 +1,231 @@
+:root {
+  --btn-color: #fde8e4;       /* Cor principal (verde/azulado) */
+  --btn-hover-color: #f47d72; /* Hover um pouco mais escuro */
+  --btn-text-color: black;
+  --color-primary: #fde8e4;
+  --navbar-bg-color: #1e1541;
+  --navbar-text-color: white;
+}
+body {
+  background-color: var(--color-primary) !important;
+  font-family: 'Roboto', sans-serif;
+}
+
+.btn-custom {
+  background-color: var(--btn-color);
+  color: var(--btn-text-color);
+  border: none;
+  transition: background-color 0.3s ease;
+
+  /* Ajustes para centralização vertical */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  /* Se quiser espaço extra embaixo para o badge */
+  padding-bottom: 2.5rem; /* só se precisar mesmo */
+  position: relative; /* importante para posicionar badges */
+}
+
+.btn-custom:hover {
+  background-color: var(--btn-hover-color);
+  color: var(--btn-text-color);
+}
+
+.hero-header {
+  background-color: var(--color-primary);
+  text-align: center;
+  padding: 3rem 1rem;
+}
+
+.logo-hero {
+  max-height: 350px;
+  max-width: 100%;
+  height: auto;
+  width: auto;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+/* Estilo da navbar customizada */
+.navbar-custom {
+  background-color: var(--navbar-bg-color) !important;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+}
+
+/* Logo pequeno no navbar */
+.navbar-custom .navbar-logo {
+  height: 40px; /* tamanho do logo */
+  margin-right: 1rem;
+}
+
+/* Título da página */
+.navbar-custom .navbar-title {
+  font-family: 'Kanit Black', sans-serif;
+  font-weight: 900;
+  font-size: 1.25rem;
+  text-transform: uppercase;
+  color: var(--navbar-text-color);
+  margin: 0;
+}
+
+.waiver-button {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  padding: 1rem;
+  text-align: center;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+}
+
+.form-container {
+  background-color: var(--navbar-bg-color);
+  padding: 2rem;
+  border-radius: 1rem;
+  color: white; /* se quiser o texto em branco */
+}
+.table-custom {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 1rem;
+  overflow: hidden;
+  background-color: #eef2ff; /* azul clarinho */
+}
+
+.table-custom thead {
+  background-color: var(--navbar-bg-color);
+  color: white;
+  font-family: 'Kanit', sans-serif;
+  text-transform: uppercase;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.table-custom th,
+.table-custom td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+.table-custom tbody tr:hover {
+  background-color: #dbeafe; /* hover azul */
+}
+
+
+
+/* Azul escuro do retângulo da esquerda */
+.guest-info-box {
+  background-color: var(--navbar-bg-color);
+  color: white;
+  font-family: 'Roboto', sans-serif;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+}
+
+.equipment-card {
+  flex: 1 1 calc(33% - 1rem); /* ocupa ~3 por linha, ajustável */
+  max-width: calc(33% - 1rem);
+  min-width: 180px;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+.equipment-card:hover {
+  transform: scale(1.07);
+}
+
+.equipment-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-bottom: 1px solid #ddd;
+}
+
+.equipment-card p {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Botões da tabela */
+.btn-delete-item {
+  transition: background-color 0.3s ease;
+}
+.btn-delete-item:hover {
+  background-color: #c82333;
+  color: white;
+}
+
+/* Área de tabela branca */
+.rented-items-box {
+  background-color: white;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  min-height: 320px;
+}
+
+  .flip-card {
+    perspective: 1000px;
+    width: 180px;
+    height: 300px;
+  }
+
+  .flip-card-inner {
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+    position: relative;
+  }
+
+  .flip-toggle:checked + .flip-card-inner {
+    transform: rotateY(180deg);
+  }
+
+  .flip-card-front,
+  .flip-card-back {
+    position: absolute;
+    backface-visibility: hidden;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  }
+
+  .flip-card-front {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .flip-card-front img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+  }
+
+  .flip-card-back {
+    background-color: #f8f9fa;
+    transform: rotateY(180deg);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .flip-toggle {
+    display: none;
+  }
