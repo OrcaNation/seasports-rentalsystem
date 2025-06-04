@@ -109,5 +109,5 @@ def price_list():
         if equipment:
             equipments.append(equipment)
 
-    equipments.sort(key=lambda eq: eq.get('label', '').lower())
+    equipments.sort(key=lambda eq: eq.get('sort', ''))
     return render_template('equipments/price_list.html', equipments=equipments, page_title="Price List")
