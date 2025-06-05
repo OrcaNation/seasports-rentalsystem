@@ -11,7 +11,7 @@
         <th class="text-start align-middle">Date</th>
 
           {% for cat in equipment_categories %}
-          <th>
+          <th class="d-none d-md-table-cell">
             <img src="{{ url_for('static', filename='img/equipments/' + cat + '.jpg') }}"
                  alt="{{ cat }}"
                  class="rounded-circle border"
@@ -29,7 +29,7 @@
             <td>{{ rental.guest_name }}</td>
             <td>{{ rental.date_obj.strftime("%d-%b") }}</td>
             {% for cat in equipment_categories %}
-            <td class="text-center">
+            <td class="text-center d-none d-md-table-cell">
               {{ rental.rented_items | selectattr('category', 'equalto', cat) | selectattr('returned', 'equalto', false) | list | length }}
             </td>
             {% endfor %}

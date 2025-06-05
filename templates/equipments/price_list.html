@@ -10,8 +10,8 @@
             <th></th>
             <th class="text-start fs-5">Name</th>
             <th class="text-start fs-5">Rental Price</th>
-            <th class="text-start fs-5">Late Fee</th>
-            <th class="text-start fs-5">Replacement Fee</th>
+            <th class="text-start d-none d-md-table-cell fs-5">Late Fee</th>
+            <th class="text-start d-none d-md-table-cell fs-5">Replacement Fee</th>
 
         </tr>
         </thead>
@@ -26,8 +26,8 @@
 
             <td class="align-middle fs-5">{{ eq.label }}</td>
             <td class="align-middle fs-5">RM {{ eq.rental_price }}</td>
-            <td class="align-middle fs-5">RM {{ eq.late_fee }}</td>
-            <td class="align-middle fs-5">RM {{ eq.replacement_fee }}</td>
+            <td class="text-start d-none d-md-table-cell fs-5">RM {{ eq.late_fee }}</td>
+            <td class="text-start d-none d-md-table-cell fs-5">RM {{ eq.replacement_fee }}</td>
 
         </tr>
         {% endfor %}

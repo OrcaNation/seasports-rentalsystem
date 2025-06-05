@@ -65,67 +65,68 @@
         </div>
 
         <!-- Coluna direita -->
-        <div class="col-md-8">
-            <div class="d-flex flex-wrap gap-4 justify-content-start">
+        <!-- Coluna direita -->
+<div class="col-md-8">
+    <div class="row g-3">
+        {% for equipment in equipments %}
+        <div class="col-6 col-sm-6 col-md-6 col-lg-4">
+            <div class="flip-card">
+                <input type="checkbox" class="flip-toggle" id="flip-{{ equipment.category }}">
+                <label for="flip-{{ equipment.category }}" class="flip-card-inner">
 
-                {% for equipment in equipments %}
-                <div class="flip-card">
-                    <input type="checkbox" class="flip-toggle" id="flip-{{ equipment.category }}">
-                    <label for="flip-{{ equipment.category }}" class="flip-card-inner">
+                    <!-- Frente do card -->
+                    <div class="flip-card-front">
+                        <img src="{{ url_for('static', filename='img/equipments/' + equipment.category + '.jpg') }}"
+                             alt="{{ equipment.category }}">
+                        <p class="mt-2 text-center fw-semibold">{{ equipment.label }}</p>
+                    </div>
 
-                        <!-- Frente do card -->
-                        <div class="flip-card-front">
-                            <img src="{{ url_for('static', filename='img/equipments/' + equipment.category + '.jpg') }}"
-                                 alt="{{ equipment.category }}">
-                            <p class="mt-2 text-center fw-semibold">{{ equipment.label }}</p>
-                        </div>
+                    <!-- Verso do card -->
+                    <div class="flip-card-back">
+                        <form method="POST" action="">
+                            <input type="hidden" name="equipment_category" value="{{ equipment.category }}">
 
-                        <!-- Verso do card -->
-                        <div class="flip-card-back">
-                            <form method="POST" action="">
-                                <input type="hidden" name="equipment_category" value="{{ equipment.category }}">
+                            {% if equipment.category in ['kayak', 'sup'] %}
+                            <div class="mb-2">
+                                <label class="form-label">Boat ID</label>
+                                <input type="number" name="equipment_id" class="form-control" required>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label">Paddle ID</label>
+                                <input type="number" name="paddle_id" class="form-control" required>
+                            </div>
 
-                                {% if equipment.category in ['kayak', 'sup'] %}
-                                <div class="mb-2">
-                                    <label class="form-label">Boat ID</label>
-                                    <input type="number" name="equipment_id" class="form-control" required>
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Paddle ID</label>
-                                    <input type="number" name="paddle_id" class="form-control" required>
-                                </div>
+                            {% elif equipment.category == 'double_kayak' %}
+                            <div class="mb-2">
+                                <label class="form-label">Boat ID</label>
+                                <input type="number" name="equipment_id" class="form-control" required>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label">Paddle 1 ID</label>
+                                <input type="number" name="paddle_id" class="form-control" required>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label">Paddle 2 ID</label>
+                                <input type="number" name="paddle_1_id" class="form-control">
+                            </div>
 
-                                {% elif equipment.category == 'double_kayak' %}
-                                <div class="mb-2">
-                                    <label class="form-label">Boat ID</label>
-                                    <input type="number" name="equipment_id" class="form-control" required>
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Paddle 1 ID</label>
-                                    <input type="number" name="paddle_id" class="form-control" required>
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Paddle 2 ID</label>
-                                    <input type="number" name="paddle_1_id" class="form-control">
-                                </div>
+                            {% else %}
+                            <div class="mb-2">
+                                <label class="form-label">{{equipment.label.title()}} ID</label>
+                                <input type="number" name="equipment_id" class="form-control" required>
+                            </div>
+                            {% endif %}
 
-                                {% else %}
-                                <div class="mb-2">
-                                    <label class="form-label">{{equipment.label.title()}} ID</label>
-                                    <input type="number" name="equipment_id" class="form-control" required>
-                                </div>
-                                {% endif %}
+                            <button type="submit" class="btn btn-secondary w-100">
+                                <i class="bi bi-plus-circle me-1"></i>Add
+                            </button>
+                        </form>
+                    </div>
 
-                                <button type="submit" class="btn btn-secondary w-100"><i class="bi bi-plus-circle me-1"></i>Add</button>
-                            </form>
-                        </div>
-
-                    </label>
-                </div>
-                {% endfor %}
-
+                </label>
             </div>
         </div>
-
-
+        {% endfor %}
+    </div>
+</div>
         {% endblock %}

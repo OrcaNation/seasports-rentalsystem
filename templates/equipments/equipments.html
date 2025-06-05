@@ -9,7 +9,7 @@
         <!-- Coluna da esquerda - Filtro -->
         <div class="col-md-4">
             <div class="text-center mb-4">
-                <img src="{{ url_for('static', filename='img/equipments/' + (equipments[0].category if equipments[0] else 'default') + '.jpg') }}"
+                <img src="{{ url_for('static', filename='img/equipments/' + (equipments[0].category if query else 'default') + '.jpg') }}"
                      alt="Equipment Image"
                      class="img-fluid rounded-circle border shadow bg-light mx-auto d-block"
                      style="width: 250px; height: 250px; object-fit: cover;">
@@ -43,12 +43,12 @@
                 <table class="table table-sm table-striped table-orca">
                     <thead>
                     <tr>
-                        <th>Number</th>
-                        <th class="text-start">Equipment</th>
-                        <th class="text-start">Condition</th>
-                        <th>Available</th>
-                        <th>View the Log</th>
-                        <th>Report</th>
+                        <th>Tag ID</th>
+                        <th class="text-start">Item</th>
+                        <th class="text-start d-none d-md-table-cell">Status</th>
+                        <th class="d-none d-md-table-cell">Available?</th>
+                        <th>Maintenance Log</th>
+                        <th>Add Report</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -56,8 +56,8 @@
                     <tr>
                         <td class="text-center">{{ eq.identifier }}</td>
                         <td>{{ eq.label }}</td>
-                        <td>{{ eq.condition }}</td>
-                        <td class="text-center">
+                        <td class="d-none d-md-table-cell">{{ eq.condition }}</td>
+                        <td class="text-center d-none d-md-table-cell">
                             {% if eq.available %}
                             <i class="bi bi-check-circle-fill text-success" title="Available"></i>
                             {% else %}
@@ -73,7 +73,7 @@
                         <td class="text-center">
                             <a href="{{ url_for('equipments.report_problem', equipment_id=eq._id) }}"
                                class="btn btn-sm btn-secondary">
-                                <i class="bi bi-tools"></i> Report
+                                <i class="bi bi-tools"></i> Add
                             </a>
                         </td>
                     </tr>

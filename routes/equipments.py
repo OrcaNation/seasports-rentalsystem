@@ -14,8 +14,11 @@ def list_equipments():
     available_only = request.args.get('available_only') == 'on'
 
     query = {}
+    default = False
+
     if selected_type:
         query['label'] = selected_type
+        default = True
     if available_only:
         query['available'] = True
 
@@ -25,6 +28,7 @@ def list_equipments():
             ('identifier', 1),
         ])
     )
+
     types = db.equipments.distinct('label')
 
 
@@ -34,6 +38,7 @@ def list_equipments():
         types=types,
         selected_type=selected_type,
         available_only=available_only,
+        query=default,
         page_title="Equipment List"
     )
 

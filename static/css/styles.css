@@ -98,22 +98,32 @@ a:hover {
 }
 
 .alert-success {
-  background-color: #4caf50;
+  background-color: var(--orca-blue);
   color: white;
   border: none;
+  opacity: 0.85;
 }
 
 .alert-warning {
   background-color: var(--orca-salmon);
   color: black;
   border: none;
+  opacity: 0.5;
+
 }
 
 .alert-danger {
-  background-color: #e55353;
+  background-color: var(--orca-salmon);
   color: white;
   border: none;
+  opacity: 0.8;
 }
+
+.alert .btn-close {
+  filter: invert(1);
+  opacity: 1;
+}
+
 
 /* Botões custom (exemplo que você usa no home) */
 .btn-custom {
@@ -132,8 +142,6 @@ a:hover {
 .badge {
   font-weight: 700;
 }
-
-
 
 .logo-hero {
   max-height: 350px;

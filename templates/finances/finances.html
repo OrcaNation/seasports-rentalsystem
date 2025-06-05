@@ -10,8 +10,8 @@
       <tr>
         <th class="text-start">Room</th>
         <th class="text-start">Name</th>
-        <th class="text-start">Start Date</th>
-        <th class="text-start">End Date</th>
+        <th class="text-start d-none d-md-table-cell">Start Date</th>
+        <th class="text-start d-none d-md-table-cell">End Date</th>
         <th class="text-start">Total</th>
         <th>Actions</th>
       </tr>
@@ -22,8 +22,8 @@
         <tr>
           <td>{{ guest.room }}</td>
           <td>{{ guest.name }}</td>
-          <td>{{ guest.start.strftime('%d-%b') }}</td>
-          <td>{{ guest.end.strftime('%d-%b') }}</td>
+          <td class="d-none d-md-table-cell">{{ guest.start.strftime('%d-%b') }}</td>
+          <td class="d-none d-md-table-cell">{{ guest.end.strftime('%d-%b') }}</td>
           <td>RM {{ guest.total }}</td>
           <td>
               <a href="{{ url_for('finances.finances_detail', room_number=guest.room) }}" class="btn btn-sm btn-secondary d-flex justify-content-center">

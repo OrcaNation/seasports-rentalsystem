@@ -8,11 +8,11 @@
         <thead>
         <tr>
             <th class="text-start">Name</th>
-            <th class="text-start">Room Number</th>
-            <th class="text-start">Departure Date</th>
+            <th class="text-start">Room N.</th>
+            <th class="text-start d-none d-md-table-cell">Departure Date</th>
             <th>View Waiver</th>
             <th>Edit</th>
-            <th>Delete</th>
+            <th class="d-none d-md-table-cell">Delete</th>
         </tr>
         </thead>
         <tbody>
@@ -20,7 +20,7 @@
         <tr>
             <td>{{ guest.name }}</td>
             <td>{{ guest.room_number }}</td>
-            <td>{{ guest.departure_date.strftime('%d-%m-%Y') }}</td>
+            <td class="d-none d-md-table-cell">{{ guest.departure_date.strftime('%d-%m-%Y') }}</td>
             <td class="text-center">
                 {% if guest.liability_waiver_drive_link %}
                 <a href="{{ guest.liability_waiver_drive_link }}" target="_blank" class="btn btn-sm btn-outline-dark">
@@ -35,7 +35,7 @@
                     <i class="bi bi-pencil-fill"></i> Edit
                 </a>
             </td>
-            <td class="text-center">
+            <td class="text-center d-none d-md-table-cell">
                 <form method="POST" action="{{ url_for('guests.delete_guest', guest_id=guest._id) }}"
                       onsubmit="return confirm('Are you sure you want to delete this guest?');">
                     <button type="submit" class="btn btn-sm btn-outline-danger">
