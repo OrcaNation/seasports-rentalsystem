@@ -150,7 +150,7 @@ def create_rental(guest_id):
             'guest_id': ObjectId(guest_id),
             'guest_name': guest.get('name'),
             'room_number': guest.get('room_number'),
-            'date':datetime.now(),
+            'date':datetime.utcnow(),
             'departure_date': guest.get('departure_date'),
             'items': [],
             'confirmed': False,
