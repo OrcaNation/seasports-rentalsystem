@@ -107,7 +107,7 @@ def show_rentals():
         "liability_waiver_signed": True,
         "departure_date": {"$gte": today}
     }))
-    return render_template('rentals/rentals.html', guests=guests, page_title="Select a Guest")
+    return render_template('rentals/rentals.html', guests=guests, page_title="Rentals")
 
 
 @rentals_bp.route("/rent/<guest_id>", methods=["POST"])
@@ -126,7 +126,6 @@ def select_guest(guest_id):
 def create_rental(guest_id):
     from app import db
     from bson import ObjectId
-    from datetime import datetime
     from flask import session, flash
 
     guests_collection = db.guests
@@ -151,7 +150,7 @@ def create_rental(guest_id):
             'guest_id': ObjectId(guest_id),
             'guest_name': guest.get('name'),
             'room_number': guest.get('room_number'),
-            'date': datetime.now(),
+            'date':datetime.now(),
             'departure_date': guest.get('departure_date'),
             'items': [],
             'confirmed': False,
@@ -234,7 +233,7 @@ def create_rental(guest_id):
         equipments=equipment_data,
         rental=rental,
         rented_items=rented_items,
-        page_title="Choose your Equipment"
+        page_title="Choose the Equipment"
     )
 
 
@@ -388,7 +387,7 @@ def return_item(rental_id, category, identifier):
     if still_renting:
         return redirect(url_for("rentals.show_return_details", rental_id=rental_id))
     else:
-        return redirect(url_for("home"))  # ou qualquer rota que seja a home
+        return redirect(url_for("home"))
 
 
 @rentals_bp.route('/return_all/<rental_id>', methods=['POST'])
@@ -403,4 +402,4 @@ def return_all(rental_id):
     for item in rental["items"]:
         return_equipment_item(rental, item["category"], str(item["identifier"]))
 
-    return redirect(url_for("home"))  # volta direto pra home
+    return redirect(url_for("home"))

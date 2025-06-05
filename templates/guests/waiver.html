@@ -21,22 +21,58 @@
     const ctx = canvas.getContext('2d');
     let drawing = false;
 
-    canvas.addEventListener('mousedown', () => drawing = true);
-    canvas.addEventListener('mouseup', () => drawing = false);
-    canvas.addEventListener('mouseout', () => drawing = false);
-    canvas.addEventListener('mousemove', draw);
+    function getPosition(e) {
+        const rect = canvas.getBoundingClientRect();
+        if (e.touches && e.touches[0]) {
+            return {
+                x: e.touches[0].clientX - rect.left,
+                y: e.touches[0].clientY - rect.top
+            };
+        } else {
+            return {
+                x: e.clientX - rect.left,
+                y: e.clientY - rect.top
+            };
+        }
+    }
+
+    function startDrawing(e) {
+        e.preventDefault();
+        drawing = true;
+        const pos = getPosition(e);
+        ctx.beginPath();
+        ctx.moveTo(pos.x, pos.y);
+    }
+
+    function stopDrawing(e) {
+        e.preventDefault();
+        drawing = false;
+    }
 
     function draw(e) {
+        e.preventDefault();
         if (!drawing) return;
-        const rect = canvas.getBoundingClientRect();
+        const pos = getPosition(e);
         ctx.lineWidth = 2;
         ctx.lineCap = 'round';
         ctx.strokeStyle = '#000';
-        ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+        ctx.lineTo(pos.x, pos.y);
         ctx.stroke();
         ctx.beginPath();
-        ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+        ctx.moveTo(pos.x, pos.y);
     }
+
+    // Mouse events
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mouseout', stopDrawing);
+    canvas.addEventListener('mousemove', draw);
+
+    // Touch events
+    canvas.addEventListener('touchstart', startDrawing);
+    canvas.addEventListener('touchend', stopDrawing);
+    canvas.addEventListener('touchcancel', stopDrawing);
+    canvas.addEventListener('touchmove', draw);
 
     function clearSignature() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);

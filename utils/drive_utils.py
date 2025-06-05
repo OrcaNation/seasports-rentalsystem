@@ -1,27 +1,36 @@
-from pydrive.auth import GoogleAuth
-from pydrive.drive import GoogleDrive
+import os
+import json
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaFileUpload
 
-def upload_pdf_to_drive(filepath, filename=None, folder_id="1vhG-AcLLxtcXCKw2R5B8lgxfXjAsUpti"):
-    gauth = GoogleAuth()
-    gauth.LoadCredentialsFile("mycreds.txt")
+def upload_pdf_to_drive(filepath, filename=None):
+    # Carregar credenciais do .env
+    json_str = os.getenv("GOOGLE_SERVICE_ACCOUNT_JSON")
+    service_account_info = json.loads(json_str)
+    credentials = service_account.Credentials.from_service_account_info(service_account_info)
 
-    drive = GoogleDrive(gauth)
+    # Criar serviço
+    service = build('drive', 'v3', credentials=credentials)
 
-    file_drive = drive.CreateFile({
-        'title': filename or filepath.split('/')[-1],
-        'parents': [{'id': folder_id}] if folder_id else []
-    })
-    file_drive.SetContentFile(filepath)
-    file_drive.Upload()
+    # Define metadados do arquivo
+    file_metadata = {
+        'name': filename or os.path.basename(filepath),
+        'parents': [os.getenv("GOOGLE_DRIVE_FOLDER_ID")] if os.getenv("GOOGLE_DRIVE_FOLDER_ID") else []
+    }
 
-    # Torna o arquivo público
-    file_drive.InsertPermission({
+    media = MediaFileUpload(filepath, mimetype='application/pdf')
+    file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
+
+    # Tornar o arquivo público
+    permission = {
         'type': 'anyone',
-        'value': 'anyone',
         'role': 'reader'
-    })
+    }
+    service.permissions().create(fileId=file['id'], body=permission).execute()
 
-    return file_drive['alternateLink']
-
+    # Gerar link de compartilhamento
+    file_info = service.files().get(fileId=file['id'], fields='webViewLink').execute()
+    return file_info['webViewLink']
 
 

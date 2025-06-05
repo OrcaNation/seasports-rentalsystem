@@ -29,7 +29,7 @@ def list_guests():
         "departure_date": {"$gte": datetime.today()}
     }).sort("departure_date", 1)
     guests_list = list(guests_cursor)
-    return render_template('guests/guests.html',page_title="View the Guests",guests=guests_list)
+    return render_template('guests/guests.html',page_title="Guests",guests=guests_list)
 
 @guests_bp.route('/register', methods=['GET', 'POST'])
 def register():
@@ -54,7 +54,7 @@ def register():
 
         return redirect(url_for('guests.show_waiver',guest_id=guest_id))
 
-    return render_template('guests/register.html',page_title="Register a Guest")
+    return render_template('guests/register.html',page_title="Register")
 
 @guests_bp.route('/waiver/<guest_id>', methods=["GET"])
 def show_waiver(guest_id):
@@ -122,6 +122,7 @@ def confirm_waiver(guest_id):
     os.replace(temp_output_path, output_path)
 
     # 5. Upload para o Google Drive (supondo que essa função já existe)
+    print("Folder ID usado:", os.getenv("GOOGLE_DRIVE_FOLDER_ID"))
     drive_link = upload_pdf_to_drive(output_path, f"waiver_signed_{guest_id}.pdf")
 
     # 6. Atualiza o banco

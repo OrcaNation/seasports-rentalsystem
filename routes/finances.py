@@ -1,6 +1,4 @@
 from flask import Blueprint, render_template, flash, redirect, url_for
-from datetime import datetime
-from bson import ObjectId
 
 finances_bp = Blueprint('finances', __name__,url_prefix='/finances')
 
@@ -45,7 +43,7 @@ def show_finances():
 
 
 
-    return render_template("finances/finances.html", guests=guests_list, page_title="Outstanding Rentals")
+    return render_template("finances/finances.html", guests=guests_list, page_title="Finances")
 
 
 @finances_bp.route('/detail/<room_number>')
@@ -99,7 +97,7 @@ def finances_detail(room_number):
                            departure_date=departure_date,
                            daily_details=daily_totals,
                            overall_total=overall_total,
-                           page_title=f"Details for {room_number} - {guest_name}")
+                           page_title=f"Details for {room_number}")
 
 from datetime import datetime
 
