@@ -81,6 +81,7 @@ def confirm_waiver(guest_id):
 
     name = guest["name"]
     today = datetime.now().strftime("%d/%m/%Y")
+    os.makedirs(os.path.join("static", "tmp"), exist_ok=True)
 
     # Caminhos dos arquivos
     template_path = os.path.join("static", "docs", "waiver.pdf")
