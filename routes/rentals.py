@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session
 from datetime import datetime, time, timedelta
-import pytz
+from zoneinfo import ZoneInfo
+
 
 rentals_bp = Blueprint('rentals', __name__, url_prefix='/rentals')
 
@@ -41,6 +42,7 @@ def create_item(equipment_category, equipment_id):
 
 
 def determine_final_price(item, returned_at):
+    MALAYSIA_TZ = ZoneInfo("Asia/Kuala_Lumpur")
     # Converte rented_at e returned_at em datetime
     if isinstance(item["rented_at"], str):
         rented_at = datetime.fromisoformat(item["rented_at"])
@@ -51,8 +53,8 @@ def determine_final_price(item, returned_at):
         returned_at = datetime.fromisoformat(returned_at)
 
     # Define os limites
-    normal_deadline = datetime.combine(rented_at.date(), time(17, 30))
-    late_deadline = datetime.combine(rented_at.date() + timedelta(days=1), time(9, 0))
+    normal_deadline = datetime.combine(rented_at.date(), time(17, 30), tzinfo=MALAYSIA_TZ)
+    late_deadline = datetime.combine(rented_at.date() + timedelta(days=1), time(9, 0), tzinfo=MALAYSIA_TZ)
 
     # Define tipo de cobrança
     if returned_at <= normal_deadline:
