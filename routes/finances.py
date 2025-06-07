@@ -5,8 +5,8 @@ finances_bp = Blueprint('finances', __name__,url_prefix='/finances')
 
 @finances_bp.route('/')
 def show_finances():
-    from app import db
-    today = datetime.utcnow()
+    from app import db, now_in_malaysia
+    today = now_in_malaysia()
 
     # Encontra todos os rentals com departure no futuro e nao pagos
     rentals = list(db.rentals.find({
@@ -14,7 +14,7 @@ def show_finances():
         "departure_date": {"$gt": today},
         "paid": False
     }))
-    print(rentals)
+
     # Organiza por room_number (que estamos usando como ID do hospede)
     guests = {}
     for rental in rentals:
@@ -48,9 +48,9 @@ def show_finances():
 
 @finances_bp.route('/detail/<room_number>')
 def finances_detail(room_number):
-    from app import db
+    from app import db, now_in_malaysia
 
-    today = datetime.utcnow()
+    today = now_in_malaysia()
 
     rentals = list(db.rentals.find({
         "room_number": room_number,
@@ -104,7 +104,7 @@ from datetime import datetime
 
 @finances_bp.route('/mark_as_paid/<room_number>/<departure_date>', methods=['POST'])
 def mark_as_paid(room_number, departure_date):
-    from app import db
+    from app import db, now_in_malaysia
 
     # Converte string da URL para datetime.date
     try:
@@ -113,7 +113,7 @@ def mark_as_paid(room_number, departure_date):
         flash("Invalid departure date format.", "danger")
         return redirect(url_for('finances.finances_detail', room_number=room_number))
 
-    now = datetime.utcnow()
+    now = now_in_malaysia()
     result = db.rentals.update_many(
         {
             "room_number": room_number,

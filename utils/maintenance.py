@@ -1,3 +1,6 @@
+
+
+
 def make_all_equipments_available():
     from app import db
 

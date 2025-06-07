@@ -1,8 +1,11 @@
 from flask import Blueprint, render_template, request, redirect, url_for,flash
 from datetime import datetime
-import os
 from pdfrw import PdfReader, PdfWriter, PageMerge, PdfDict
 from utils.drive_utils import upload_pdf_to_drive
+import csv
+import re
+
+
 
 
 guests_bp = Blueprint('guests', __name__, url_prefix='/guests')
@@ -20,10 +23,22 @@ def fill_pdf_form(template_path, output_path, data):
 
     PdfWriter().write(output_path, template_pdf)
 
+
+
+def room_sort_key(room):
+    # Match partes numéricas e alfabéticas separadamente
+    match = re.match(r"(\d+)\s*([A-Za-z]*)", room)
+    if match:
+        number = int(match.group(1))
+        letter = match.group(2).upper()  # 'a' e 'A' tratadas igual
+        return (number, letter)
+    else:
+        return (float('inf'), room)  # Se não bater regex, manda pro fim
+
 @guests_bp.route("/", methods=["GET"])
 def list_guests():
     from app import db
-    from datetime import datetime
+
 
     guests_cursor = db.guests.find({
         "departure_date": {"$gte": datetime.today()}
@@ -33,20 +48,41 @@ def list_guests():
 
 @guests_bp.route('/register', methods=['GET', 'POST'])
 def register():
-    from app import db
+    from app import db, now_in_malaysia
+
+    now = now_in_malaysia().strftime("%Y-%m-%d")
+    csv_rooms = "static/docs/rooms.csv"
+    with open(csv_rooms, newline='') as csvfile:
+        reader = csv.DictReader(csvfile)
+        rooms_without_construction =  {row["room"] for row in reader if row['available']}
+
+    guests_collection = db.guests  # substitua pelo nome da sua coleção se for diferente
+    active_guests = guests_collection.find({
+        "departure_date": {"$gt": now_in_malaysia()}
+    })
+
+    occupied_rooms = {guest['room_number'] for guest in active_guests}
+    available_rooms = rooms_without_construction - occupied_rooms
+
+    sorted_rooms = sorted(available_rooms, key=room_sort_key)
+
+
     if request.method == 'POST':
         name = request.form.get('name')
         room_number = request.form.get('room_number')
-        departure_date_str = request.form.get('departure_date')
+
+        if room_number not in available_rooms:
+            flash("Room not available", "danger")
+            return render_template('guests/register.html', page_title="Register", now=now, rooms=sorted_rooms)
 
         # Converte string para datetime, cuidado com o formato (ex: 'YYYY-MM-DD')
+        departure_date_str = request.form.get('departure_date')
         departure_date = datetime.strptime(departure_date_str, '%Y-%m-%d') if departure_date_str else None
 
         guest = {
             "name": name,
             "room_number": room_number,
             "departure_date": departure_date,
-            "waiver_signed": False
         }
 
         result = db.guests.insert_one(guest)
@@ -54,7 +90,7 @@ def register():
 
         return redirect(url_for('guests.show_waiver',guest_id=guest_id))
 
-    return render_template('guests/register.html',page_title="Register")
+    return render_template('guests/register.html',page_title="Register", now=now, rooms=sorted_rooms)
 
 @guests_bp.route('/waiver/<guest_id>', methods=["GET"])
 def show_waiver(guest_id):
@@ -65,7 +101,7 @@ def show_waiver(guest_id):
 
 @guests_bp.route("/waiver/<guest_id>/confirm", methods=["POST"])
 def confirm_waiver(guest_id):
-    from app import db
+    from app import db, now_in_malaysia
     from bson import ObjectId
     from flask import flash, request, redirect, url_for
     import base64
@@ -73,14 +109,14 @@ def confirm_waiver(guest_id):
     from PIL import Image
     import fitz  # PyMuPDF
     import os
-    from datetime import datetime
+
 
     guest = db.guests.find_one({"_id": ObjectId(guest_id)})
     if not guest:
         return "Guest not found", 404
 
     name = guest["name"]
-    today = datetime.now().strftime("%d/%m/%Y")
+    today = now_in_malaysia().strftime("%d/%m/%Y")
     os.makedirs(os.path.join("static", "tmp"), exist_ok=True)
 
     # Caminhos dos arquivos
@@ -123,7 +159,7 @@ def confirm_waiver(guest_id):
     os.replace(temp_output_path, output_path)
 
     # 5. Upload para o Google Drive (supondo que essa função já existe)
-    print("Folder ID usado:", os.getenv("GOOGLE_DRIVE_FOLDER_ID"))
+
     drive_link = upload_pdf_to_drive(output_path, f"waiver_signed_{guest_id}.pdf")
 
     # 6. Atualiza o banco

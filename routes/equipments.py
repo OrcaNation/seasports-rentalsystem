@@ -46,8 +46,6 @@ def list_equipments():
 def view_problems(equipment_id):
     from app import db
     equipment = db.equipments.find_one({"_id": ObjectId(equipment_id)})
-    current_date = datetime.today().strftime('%Y-%m-%d')
-    condition = equipment.get('condition', '')
 
     if not equipment:
         return "Equipment not found", 404
@@ -55,7 +53,7 @@ def view_problems(equipment_id):
 
 @equipments_bp.route("/equipments/<equipment_id>/report_problem", methods=["GET", "POST"])
 def report_problem(equipment_id):
-    from app import db
+    from app import db, now_in_malaysia
     equipment = db.equipments.find_one({"_id": ObjectId(equipment_id)})
     if not equipment:
         return "Equipment not found", 404
@@ -65,13 +63,12 @@ def report_problem(equipment_id):
         staff = request.form.get("staff")
         date_str = request.form.get("date")
         condition = request.form.get("condition")
-        print("Received:", staff, date_str, condition, problem)
 
         if problem and staff and date_str and condition:
             try:
                 reported_at = datetime.strptime(date_str, "%Y-%m-%d")  # ou "%d/%m/%Y" dependendo do formato no form
             except ValueError:
-                reported_at = datetime.utcnow()
+                reported_at = now_in_malaysia()
 
             db.equipments.update_one(
                 {"_id": ObjectId(equipment_id)},
@@ -93,7 +90,7 @@ def report_problem(equipment_id):
         return redirect(url_for("equipments.view_problems", equipment_id=equipment_id))
 
     else:
-        current_date = datetime.today().strftime("%Y-%m-%d")  # precisa ser compatível com o input no form
+        current_date = now_in_malaysia().strftime("%Y-%m-%d")  # precisa ser compatível com o input no form
         condition = equipment.get("condition", "")
         return render_template("equipments/report_problem.html",
                                equipment=equipment,

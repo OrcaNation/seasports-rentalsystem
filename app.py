@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from flask import Flask, render_template, request, flash, redirect, url_for, session
 from pymongo import MongoClient
 from datetime import datetime
+from zoneinfo import ZoneInfo
 import pandas as pd
 
 from routes.equipments import equipments_bp
@@ -15,6 +16,8 @@ load_dotenv()
 
 app = Flask(__name__)
 
+def now_in_malaysia():
+    return datetime.now(ZoneInfo("Asia/Kuala_Lumpur"))
 
 @app.before_request
 def require_login():

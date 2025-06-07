@@ -6,7 +6,7 @@ rentals_bp = Blueprint('rentals', __name__, url_prefix='/rentals')
 
 
 def create_item(equipment_category, equipment_id):
-    from app import db
+    from app import db, now_in_malaysia
     equipments_collection_c = db.equipments
     try:
         equipment_id = int(equipment_id)  # <-- Conversão necessária!
@@ -29,7 +29,7 @@ def create_item(equipment_category, equipment_id):
         'label': equipment_label,
         'category': equipment_category,
         'identifier': equipment_id,
-        'rented_at': datetime.now(),
+        'rented_at': now_in_malaysia(),
         'returned': False,
         'price': price,
         'late_fee': late_fee,
@@ -64,11 +64,11 @@ def determine_final_price(item, returned_at):
 
 
 def return_equipment_item(rental, category, identifier):
-    from app import db
+    from app import db, now_in_malaysia
     updated_items = []
     item_returned = False
 
-    returned_at = datetime.utcnow()
+    returned_at = now_in_malaysia()
     for item in rental["items"]:
         if str(item["identifier"]) == identifier and item["category"] == category and not item.get("returned", False):
             item["returned"] = True
@@ -100,9 +100,9 @@ def return_equipment_item(rental, category, identifier):
 
 @rentals_bp.route('/')
 def show_rentals():
-    from app import db
+    from app import db, now_in_malaysia
     guests_collection = db.guests
-    today = datetime.now(pytz.UTC)  # para garantir compatibilidade com MongoDB timestamps
+    today = now_in_malaysia()
     guests = list(guests_collection.find({
         "liability_waiver_signed": True,
         "departure_date": {"$gte": today}
@@ -124,7 +124,7 @@ def select_guest(guest_id):
 
 @rentals_bp.route('/create_rental/<guest_id>', methods=['GET', 'POST'])
 def create_rental(guest_id):
-    from app import db
+    from app import db, now_in_malaysia
     from bson import ObjectId
     from flask import session, flash
 
@@ -150,7 +150,7 @@ def create_rental(guest_id):
             'guest_id': ObjectId(guest_id),
             'guest_name': guest.get('name'),
             'room_number': guest.get('room_number'),
-            'date':datetime.utcnow(),
+            'date':now_in_malaysia(),
             'departure_date': guest.get('departure_date'),
             'items': [],
             'confirmed': False,
@@ -247,7 +247,7 @@ def delete_rental_item(rental_id, category, item_identifier):
         {"_id": ObjectId(rental_id)},
         {"$pull": {"items": {"category": category, "identifier": int(item_identifier)}}}
     )
-    print(ObjectId(rental_id), category, item_identifier)
+
     # Marca o equipamento correspondente como disponível novamente
     db.equipments.update_one(
         {"category": category, "identifier": int(item_identifier)},

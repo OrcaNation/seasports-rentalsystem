@@ -273,16 +273,20 @@ a:hover {
   overflow: hidden;
 }
 
-.table-orca thead {
+.table-orca thead{
   background-color: var(--orca-blue) !important;
   color: white !important;
   text-align: center;
 }
 
 .table-orca thead th {
-  background-color: var(--orca-blue) !important;
+  background-color: var(--orca-blue) ;
   color: white !important;
   vertical-align: middle;
+}
+
+.table-orca.special-head thead th {
+  background-color: var(--orca-salmon) !important;
 }
 
 .table-orca img {
