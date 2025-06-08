@@ -10,6 +10,7 @@ def register_callbacks(dash_app):
         Input("btn-back-home", "n_clicks"),
         prevent_initial_call=True
     )
+
     def update_date_and_redirect(n_this_year, n_back_home):
         triggered_id = ctx.triggered_id
 
