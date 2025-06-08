@@ -11,10 +11,12 @@ from routes.equipments import equipments_bp
 from routes.guests import guests_bp
 from routes.rentals import rentals_bp
 from routes.finances import finances_bp
+from dash_app import init_dash
 
 load_dotenv()
 
 app = Flask(__name__)
+dash_app = init_dash(app)
 
 def now_in_malaysia():
     return datetime.now(ZoneInfo("Asia/Kuala_Lumpur"))
@@ -161,6 +163,10 @@ def login():
         else:
             flash('Incorrect password', 'danger')
     return render_template('login.html', page_title="Insert the password")
+
+@app.route("/dashboard/")
+def dashboard():
+    return redirect("/dashboard/")
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))

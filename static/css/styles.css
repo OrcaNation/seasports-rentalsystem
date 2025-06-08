@@ -295,3 +295,27 @@ a:hover {
   border-radius: 20%; /* Deixa a imagem circular */
   object-fit: cover; /* Evita distorção e preenche o espaço corretamente */
 }
+
+.orca-card {
+  background-color: var(--orca-salmon);!important
+  color: #1e1542;
+  border: none;
+  font-family: 'Roboto', sans-serif;
+}
+
+.card-title {
+  font-family: 'Kanit', sans-serif;
+  font-size: 1.3rem;
+  margin-left: 0.5rem;
+  margin-bottom: 0;
+  text-transform: uppercase
+}
+
+.card-text {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.7rem;
+  font-weight: bold;
+  text-align: center;
+
+}
+
