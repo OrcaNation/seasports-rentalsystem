@@ -35,7 +35,7 @@
       {% else %}
         <tr>
           <td colspan="6" class="text-center text-muted py-4">
-            No active rentals with items to return.
+            No active payments need to be done.
           </td>
         </tr>
       {% endif %}
@@ -48,10 +48,10 @@
     <a href="{{ url_for('home') }}" class="btn btn-primary">
       <i class="bi bi-arrow-left-circle me-1"></i> Back
     </a>
-<a href="#" class="btn btn-secondary position-relative">
+<a href="{{ url_for('finances.dashboard') }}" class="btn btn-secondary position-relative">
   <i class="bi bi-bar-chart-fill me-1"></i> Reports
   <span class="position-absolute top-100 start-100 translate-middle badge bg-warning text-dark">
-    Coming Soon!
+    New!
   </span>
 </a>
 

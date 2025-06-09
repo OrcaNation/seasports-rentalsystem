@@ -1,0 +1,337 @@
+{% extends "base.html" %}
+
+{% block title %}OrcaNation | Dashboard{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 col-12" id="filters-container">
+            <form method="get" action="{{ url_for('finances.dashboard') }}">
+                <div class="card p-3 sticky-top shadow-sm guest-info-box rounded" style="top: 1rem;">
+                    <h4 class="fw-bold mb-3">Filters</h4>
+
+                    <label for="startDate" class="form-label">Start Date</label>
+                    <input type="date" class="form-control mb-2" id="startDate" name="start"
+                           value="{{ filters.start }}">
+
+                    <label for="endDate" class="form-label">End Date</label>
+                    <input type="date" class="form-control mb-4" id="endDate" name="end" value="{{ filters.end }}">
+
+                    <label for="preset" class="form-label">Quick Select</label>
+                    <select class="form-select" id="preset" onchange="quickSelect(this.value)">
+                        <option value="">Custom</option>
+                        <option value="today">Today</option>
+                        <option value="this_week">This Week</option>
+                        <option value="this_month">This Month</option>
+                        <option value="this_year">This Year</option>
+                    </select>
+
+                    <label for="category" class="form-label mt-3">Equipment</label>
+                    <select class="form-select mb-3" id="category" name="category">
+                        {% for cat in categories %}
+                        <option value="{{ cat }}" {% if filters.category== cat %}selected{% endif %}>
+                            {{ cat }}
+                        </option>
+                        {% endfor %}
+                    </select>
+
+                    <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Main content -->
+        <div class="col-md-9 col-12">
+            <!-- Cards -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-3">
+                    <div class="card card-stat bg-orca-blue">
+                        <div class="icon-title">
+                            <h6>Total Sales</h6>
+                            <i class="bi bi-cash-coin"></i>
+                        </div>
+                        <div class="value">RM {{ total_revenue }}</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card card-stat bg-orca-salmon">
+                        <div class="icon-title">
+                            <h6>Rentals</h6>
+                            <i class="bi bi-calendar-check"></i>
+                        </div>
+                        <div class="value">{{ total_rentals }}</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card card-stat bg-orca-blue">
+                        <div class="icon-title">
+                            <h6>Guests</h6>
+                            <i class="bi bi-person-fill-check"></i>
+                        </div>
+                        <div class="value">{{ total_guests }}</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card card-stat bg-orca-salmon">
+                        <div class="icon-title">
+                            <h6>Items Rented</h6>
+                            <i class="bi bi-box-seam"></i>
+                        </div>
+                        <div class="value">{{ total_items }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="card mb-4">
+    <div class="card-header fw-bold tabl">Detailed Transactions</div>
+    <div class="card-body table-responsive">
+        <table class="table table-sm table-striped table-orca">
+            <thead>
+            <tr>
+                <th class="text-start">Name</th>
+                <th class="text-start">Room Number</th>
+                <th>Date</th>
+                <th>Total (RM)</th>
+                <th>Paid</th>
+                <th class="d-none d-md-table-cell">Odoo</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for rental in rentals %}
+                <tr>
+                    <td>{{ rental.guest_name }}</td>
+                    <td>{{ rental.room_number }}</td>
+                    <td>{{ rental.date.strftime('%d-%b-%Y') }}</td>
+                    <td class="text-center">{{ rental.total_price }}</td>
+                    <td class="text-center">
+                        {% if rental.paid %}
+                           <i class="bi bi-check-circle-fill text-success" title="Available"></i>
+                        {% else %}
+                            <i class="bi bi-x-circle-fill text-danger" title="Not Available"></i>
+                        {% endif %}
+                    </td>
+                    <td class="d-none d-md-table-cell text-center">
+
+                        {% if rental.odoo_uploaded %}
+                           <i class="bi bi-check-circle-fill text-success" title="Available"></i>
+                        {% else %}
+                            <i class="bi bi-x-circle-fill text-danger" title="Not Available"></i>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6" class="text-center">No rentals found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+            <!-- Line chart -->
+            <div class="card mb-4">
+                <div class="card-header fw-bold">Revenue Over Time</div>
+                <div class="card-body">
+                    <canvas id="lineChart" style="max-height: 200px;"></canvas>
+                </div>
+            </div>
+
+            <!-- Bar + Pie chart row -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header fw-bold">Average Rentals by Day of Week</div>
+                        <div class="card-body" style="height: 300px;">
+                            <canvas id="barChart" style="max-height: 300px;"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header fw-bold">Revenue by Equipment Type</div>
+                        <div class="card-body" style="height: 300px;">
+                            <canvas id="pieChart" style="max-height: 300px;"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+<script>
+    const orcaBlue = getComputedStyle(document.documentElement).getPropertyValue('--orca-blue').trim();
+    const orcaSalmon = getComputedStyle(document.documentElement).getPropertyValue('--orca-salmon').trim();
+    const orcaPink = getComputedStyle(document.documentElement).getPropertyValue('--orca-pink').trim();
+
+    const maxRevenue = Math.max(...{{ line.values_line | tojson }});
+    const maxRevenueBar = Math.max(...{{ bar.values_bar | tojson }});
+    const suggestedMax = Math.ceil(maxRevenue * 1.2);  // aumenta 20% e arredonda pra cima
+    const suggestedBarMax = Math.ceil(maxRevenueBar * 1.2);  // aumenta 20% e arredonda pra cima
+
+const lineChart = new Chart(document.getElementById('lineChart'), {
+  type: 'line',
+  data: {
+    labels: {{ line.labels_line | tojson }},
+    datasets: [{
+      label: 'Revenue (RM)',
+      data: {{ line.values_line | tojson }},
+      fill: true,
+      borderColor: orcaBlue,
+      tension: 0.1
+    }]
+  },
+  options: {
+    scales: {
+      y: {
+        beginAtZero: true,
+        suggestedMax: suggestedMax,
+        title: {
+          display: true,
+          text: 'RM'
+        }
+      }
+    },
+    plugins: {
+      legend: {
+        display: false
+      },
+      datalabels: {
+        color: 'black',
+        anchor: 'end',
+        align: 'top',
+        font: {
+          weight: 'bold'
+        }
+      }
+    }
+  },
+  plugins: [ChartDataLabels]
+});
+
+const barChart = new Chart(document.getElementById('barChart'), {
+  type: 'bar',
+  data: {
+    labels: {{ bar.labels_bar | tojson }},
+    datasets: [{
+      label: 'Avg Revenue per Day (RM)',
+      data: {{ bar.values_bar | tojson }},
+      backgroundColor: orcaBlue
+    }]
+  },
+  options: {
+    scales: {
+      y: {
+        beginAtZero: true,
+        suggestedMax: suggestedBarMax,
+        title: {
+          display: true,
+          text: 'RM'
+        }
+      }
+    },
+    plugins: {
+      legend: {
+        display: false
+      },
+      datalabels: {
+        color: 'white',
+        anchor: 'center',
+        align: 'top',
+        font: {
+          weight: 'bold',
+          size: 14
+        },
+        formatter: (value) => value
+      }
+    }
+  },
+  plugins: [ChartDataLabels]
+});
+
+    const pieChart = new Chart(document.getElementById('pieChart'), {
+  type: 'pie',
+  data: {
+    labels: {{ pie.labels_pie | tojson }},
+    datasets: [{
+      label: 'Revenue by Equipment',
+      data: {{ pie.values_pie | tojson }},
+      backgroundColor: [
+        orcaBlue,
+        orcaSalmon,
+        orcaPink,
+        '#ffbd59',
+        '#0097b2',
+        '#ff6347',
+        '#6a5acd'  // adiciona mais cores se tiver mais categorias
+      ]
+    }]
+  },
+  options: {
+    maintainAspectRatio: false,
+    plugins: {
+    legend: {
+      display: true,
+      position: 'right',
+      align: 'center',
+      labels: {
+        boxWidth: 20,
+        padding: 20
+      }
+    },
+      datalabels: {
+        color: 'white',
+        font: {
+          weight: 'bold',
+          size: 14
+        },
+        formatter: (value, context) => {
+          const data = context.chart.data.datasets[0].data;
+          const total = data.reduce((a, b) => a + b, 0);
+          const percentage = ((value / total) * 100).toFixed(1);
+          return percentage + '%';
+        }
+      }
+    }
+  },
+  plugins: [ChartDataLabels]
+});
+
+
+  function quickSelect(value) {
+  const today = new Date();
+  let start, end;
+
+  if (value === 'today') {
+    start = end = today.toISOString().split('T')[0];
+  } else if (value === 'this_week') {
+    // Últimos 7 dias: início = 7 dias atrás, fim = hoje
+    const past7Days = new Date(today);
+    past7Days.setDate(today.getDate() - 6);
+    start = past7Days.toISOString().split('T')[0];
+    end = today.toISOString().split('T')[0];
+  } else if (value === 'this_month') {
+    // Do dia 1 do mês até hoje
+    start = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
+    end = today.toISOString().split('T')[0];
+  } else if (value === 'this_year') {
+    start = new Date(today.getFullYear(), 0, 1).toISOString().split('T')[0];
+    end = today.toISOString().split('T')[0];
+  } else {
+    start = '';
+    end = '';
+  }
+
+  document.getElementById('startDate').value = start;
+  document.getElementById('endDate').value = end;
+}
+</script>
+
+
+{% endblock %}

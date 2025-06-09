@@ -164,7 +164,7 @@ a:hover {
   background-color: var(--navbar-bg-color);
   color: white;
   padding: 1.5rem;
-  border-radius: 0.5rem;
+  border-radius: 1rem;
 }
 
 .equipment-card {
@@ -294,4 +294,42 @@ a:hover {
   height: 50px; /* Mantém o tamanho consistente */
   border-radius: 20%; /* Deixa a imagem circular */
   object-fit: cover; /* Evita distorção e preenche o espaço corretamente */
+}
+
+.bg-orca-blue {
+  background-color: var(--orca-blue);
+}
+
+.bg-orca-salmon {
+  background-color: var(--orca-salmon);
+}
+
+.card-stat {
+  color: white;
+  border: none;
+  border-radius: 1rem;
+  padding: 1rem;
+}
+
+.card-stat .icon-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-stat .icon-title h6 {
+  font-family: 'Kanit', sans-serif;
+  text-transform: uppercase;
+  font-size: 1.35rem;
+  margin-bottom: 0;
+}
+
+.card-stat .icon-title i {
+  font-size: 1.8rem;
+}
+
+.card-stat .value {
+  font-family: 'Roboto', sans-serif;
+  font-size: 2.5rem;
+  text-align: center;;
 }
